@@ -2,42 +2,33 @@ package com.freenow.domainobject;
 
 import com.freenow.domainvalue.GeoCoordinate;
 import com.freenow.domainvalue.OnlineStatus;
-import java.time.ZonedDateTime;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import java.time.ZonedDateTime;
+import java.util.Set;
 
 @Entity
 @Table(
-    name = "driver",
-    uniqueConstraints = @UniqueConstraint(name = "uc_username", columnNames = {"username"})
+        name = "driver",
+        uniqueConstraints = @UniqueConstraint(name = "uc_username", columnNames = {"username"})
 )
-public class DriverDO
-{
+public class DriverDO {
+    @Column(nullable = false)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private final ZonedDateTime dateCreated = ZonedDateTime.now();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private ZonedDateTime dateCreated = ZonedDateTime.now();
-
-    @Column(nullable = false)
-    @NotNull(message = "Username can not be null!")
+    @NotEmpty(message = "Username can not be empty or null!")
     private String username;
 
     @Column(nullable = false)
-    @NotNull(message = "Password can not be null!")
+    @NotEmpty(message = "Password can not be empty or null!")
     private String password;
 
     @Column(nullable = false)
@@ -54,14 +45,23 @@ public class DriverDO
     @Column(nullable = false)
     private OnlineStatus onlineStatus;
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "drivers_cars",
+            joinColumns = @JoinColumn(
+                    name = "driver_id",
+                    referencedColumnName = "id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "car_id",
+                    referencedColumnName = "id"
+            )
+    )
+    private Set<CarDO> carDO;
 
-    private DriverDO()
-    {
+    private DriverDO() {
     }
 
-
-    public DriverDO(String username, String password)
-    {
+    public DriverDO(String username, String password) {
         this.username = username;
         this.password = password;
         this.deleted = false;
@@ -70,65 +70,52 @@ public class DriverDO
         this.onlineStatus = OnlineStatus.OFFLINE;
     }
 
-
-    public Long getId()
-    {
+    public Long getId() {
         return id;
     }
 
-
-    public void setId(Long id)
-    {
+    public void setId(Long id) {
         this.id = id;
     }
 
-
-    public String getUsername()
-    {
+    public String getUsername() {
         return username;
     }
 
-
-    public String getPassword()
-    {
+    public String getPassword() {
         return password;
     }
 
-
-    public Boolean getDeleted()
-    {
+    public Boolean getDeleted() {
         return deleted;
     }
 
-
-    public void setDeleted(Boolean deleted)
-    {
+    public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
     }
 
-
-    public OnlineStatus getOnlineStatus()
-    {
+    public OnlineStatus getOnlineStatus() {
         return onlineStatus;
     }
 
-
-    public void setOnlineStatus(OnlineStatus onlineStatus)
-    {
+    public void setOnlineStatus(OnlineStatus onlineStatus) {
         this.onlineStatus = onlineStatus;
     }
 
-
-    public GeoCoordinate getCoordinate()
-    {
+    public GeoCoordinate getCoordinate() {
         return coordinate;
     }
 
-
-    public void setCoordinate(GeoCoordinate coordinate)
-    {
+    public void setCoordinate(GeoCoordinate coordinate) {
         this.coordinate = coordinate;
         this.dateCoordinateUpdated = ZonedDateTime.now();
     }
 
+    public Set<CarDO> getCarDO() {
+        return carDO;
+    }
+
+    public void setCarDO(final Set<CarDO> carDO) {
+        this.carDO = carDO;
+    }
 }
