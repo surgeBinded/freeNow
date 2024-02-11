@@ -30,7 +30,6 @@ _NOTE: Please DO NOT publish the project, e.g. by uploading it to GitHub or the 
 
 ---
 
-
 ## Task 1
  * Write a new Controller for maintaining cars (CRUD).
    * Decide on your own how the methods should look like.
