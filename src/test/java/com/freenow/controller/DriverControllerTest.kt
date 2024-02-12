@@ -35,10 +35,10 @@ class DriverControllerTest @Autowired constructor(
     @Nested
     @DisplayName("GET $BASE_URL/all")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @WithMockUser(username = "daniel")
     inner class GetAllExistentDrivers {
 
         @Test
-        @WithMockUser(username = "daniel")
         fun `should return all existing drivers`() {
             mockMvc.get("$BASE_URL/all")
                 .andDo { print() }
@@ -54,10 +54,10 @@ class DriverControllerTest @Autowired constructor(
     @Nested
     @DisplayName("GET $BASE_URL/{driverId}")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @WithMockUser(username = "daniel")
     inner class GetCar {
 
         @Test
-        @WithMockUser(username = "daniel")
         fun `should return driver with given id`() {
             // given
             val driverId = 3
@@ -80,7 +80,6 @@ class DriverControllerTest @Autowired constructor(
         }
 
         @Test
-        @WithMockUser(username = "daniel")
         fun `should return NOT FOUND if the driver with the given id does not exist`() {
             // given
             val driverId = 0
@@ -95,10 +94,10 @@ class DriverControllerTest @Autowired constructor(
     @Nested
     @DisplayName("POST $BASE_URL")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @WithMockUser(username = "daniel")
     inner class PostNewDriver {
 
         @Test
-        @WithMockUser(username = "daniel")
         fun `should add new driver`() {
             // given
             val driver = DriverDTO.newBuilder()
@@ -129,8 +128,7 @@ class DriverControllerTest @Autowired constructor(
                 .andExpect { content { json(objectMapper.writeValueAsString(driver)) } }
         }
 
-        @Test
-        @WithMockUser(username = "daniel")
+
         fun `should return BAD REQUEST when driver already exists`() {
             // given
             val driver = DriverDTO.newBuilder()
@@ -155,7 +153,6 @@ class DriverControllerTest @Autowired constructor(
         }
 
         @Test
-        @WithMockUser(username = "daniel")
         fun `should return BAD REQUEST when constraints are not satisfied`() {
             // given
             val driver = DriverDTO.newBuilder()
@@ -183,11 +180,11 @@ class DriverControllerTest @Autowired constructor(
     @Nested
     @DisplayName("DELETE $BASE_URL/{carId}")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @WithMockUser(username = "daniel")
     inner class DeleteExistingCar {
 
         @Test
         @DirtiesContext
-        @WithMockUser(username = "daniel")
         fun `should set field deleted to true for the driver with given id`() {
             // given
             val driverId = 1L
@@ -213,7 +210,6 @@ class DriverControllerTest @Autowired constructor(
         }
 
         @Test
-        @WithMockUser(username = "daniel")
         fun `should return NOT FOUND if the driver with the given id does not exist`() {
 
             // given
@@ -229,10 +225,10 @@ class DriverControllerTest @Autowired constructor(
     @Nested
     @DisplayName("PATCH $BASE_URL/assignCar&unassignCar/{driverId}/{carId}")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @WithMockUser(username = "daniel")
     open inner class PatchExistingDriver {
 
         @Test
-        @WithMockUser(username = "daniel")
         fun `should assign car with provided id to driver with provided id `() {
             // given
             val carId = 4
@@ -270,7 +266,6 @@ class DriverControllerTest @Autowired constructor(
         }
 
         @Test
-        @WithMockUser(username = "daniel")
         fun `should return BAD REQUEST if car is already assigned to some driver`() {
             // given
             val carId = 2
@@ -283,7 +278,6 @@ class DriverControllerTest @Autowired constructor(
         }
 
         @Test
-        @WithMockUser(username = "daniel")
         fun `should return BAD REQUEST if when assigning car to deleted driver`() {
             // given
             val carId = 2
@@ -296,7 +290,6 @@ class DriverControllerTest @Autowired constructor(
         }
 
         @Test
-        @WithMockUser(username = "daniel")
         fun `should return NOT FOUND if when driver not found`() {
             // given
             val carId = 2
@@ -309,7 +302,6 @@ class DriverControllerTest @Autowired constructor(
         }
 
         @Test
-        @WithMockUser(username = "daniel")
         fun `should return NOT FOUND if when car not found`() {
             // given
             val carId = 0
@@ -323,7 +315,6 @@ class DriverControllerTest @Autowired constructor(
 
         @Test
         @Transactional
-        @WithMockUser(username = "daniel")
         open fun `should unassign car with provided id from driver with provided id `() {
             // given
             val carId = 2
@@ -351,7 +342,6 @@ class DriverControllerTest @Autowired constructor(
         }
 
         @Test
-        @WithMockUser(username = "daniel")
         open fun `should return BAD REQUEST when unassigning car that is not assigned to driver with id`() {
             // given
             val carId = 1
@@ -364,7 +354,6 @@ class DriverControllerTest @Autowired constructor(
         }
 
         @Test
-        @WithMockUser(username = "daniel")
         fun `should return NOT FOUND when driver not found`() {
             // given
             val carId = 2
@@ -377,7 +366,6 @@ class DriverControllerTest @Autowired constructor(
         }
 
         @Test
-        @WithMockUser(username = "daniel")
         fun `should return NOT FOUND when car not found`() {
             // given
             val carId = 0
@@ -393,9 +381,9 @@ class DriverControllerTest @Autowired constructor(
     @Nested
     @DisplayName("POST $BASE_URL/search")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @WithMockUser(username = "daniel")
     inner class GetSearchResults {
         @Test
-        @WithMockUser(username = "daniel")
         fun `should return drivers that satisfy the search filters`() {
             // given
             val searchFilters = SearchFilters(
@@ -410,7 +398,7 @@ class DriverControllerTest @Autowired constructor(
             )
 
             // when
-            val performPost = mockMvc.post("$BASE_URL/search") {
+            val performPost = mockMvc.get("$BASE_URL/search") {
                 contentType = MediaType.APPLICATION_JSON
                 content = objectMapper.writeValueAsString(searchFilters)
             }
@@ -425,6 +413,25 @@ class DriverControllerTest @Autowired constructor(
                         jsonPath("drivers.length()") {value(2)}
                         jsonPath("totalElements") {value(2)}
                     }
+                }
+        }
+
+        @Test
+        fun `should return BAD REQUEST if no request body is provided`() {
+            // given
+            val searchFilters = null
+
+            // when
+            val performPost = mockMvc.get("$BASE_URL/search") {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(searchFilters)
+            }
+
+            // then
+            performPost
+                .andDo { print() }
+                .andExpect {
+                    status { isBadRequest() }
                 }
         }
     }

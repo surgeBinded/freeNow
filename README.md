@@ -75,6 +75,9 @@ Good luck!
 
 _NOTE: Please make sure to not submit any personal data with your tests result. Personal data is for example your name, your birth date, email address etc._
 
+--------------------------------------
+--------------------------------------
+--------------------------------------
 
 ###The API is protected by a basic Auth with the credentials
 

@@ -28,10 +28,10 @@ internal class CarControllerTest @Autowired constructor(
     @Nested
     @DisplayName("GET ${BASE_URL}/all")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @WithMockUser(username = "daniel")
     inner class GetAllCars {
 
         @Test
-        @WithMockUser(username = "daniel")
         fun `should return all cars`() {
             mockMvc.get("$BASE_URL/all")
                 .andDo { print() }
@@ -46,10 +46,10 @@ internal class CarControllerTest @Autowired constructor(
     @Nested
     @DisplayName("GET $BASE_URL/{carId}")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @WithMockUser(username = "daniel")
     inner class GetCar {
 
         @Test
-        @WithMockUser(username = "daniel")
         fun `should return the car with the given id`() {
 
             // given
@@ -78,7 +78,6 @@ internal class CarControllerTest @Autowired constructor(
         }
 
         @Test
-        @WithMockUser(username = "daniel")
         fun `should return NOT FOUND if the car with the given id does not exist`() {
 
             // given
@@ -95,10 +94,10 @@ internal class CarControllerTest @Autowired constructor(
     @Nested
     @DisplayName("POST $BASE_URL")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @WithMockUser(username = "daniel")
     inner class PostNewCar {
 
         @Test
-        @WithMockUser(username = "daniel")
         @DirtiesContext
         fun `should add a new car`() {
             // given
@@ -137,7 +136,6 @@ internal class CarControllerTest @Autowired constructor(
 
 
         @Test
-        @WithMockUser(username = "daniel")
         fun `should return BAD REQUEST when constraints are not satisfied`() {
             // given
             val newCar = CarDTO.newBuilder()
@@ -168,10 +166,10 @@ internal class CarControllerTest @Autowired constructor(
     @Nested
     @DisplayName("PATCH $BASE_URL/{carId}")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @WithMockUser(username = "daniel")
     inner class PatchExistingCar {
 
         @Test
-        @WithMockUser(username = "daniel")
         fun `should update an existing car`() {
             // given
             val carId = 5L
@@ -202,7 +200,6 @@ internal class CarControllerTest @Autowired constructor(
 
 
         @Test
-        @WithMockUser(username = "daniel")
         fun `should return NOT FOUND if car with given id was not found`() {
             // given
             val carId = 0L
@@ -236,11 +233,11 @@ internal class CarControllerTest @Autowired constructor(
     @Nested
     @DisplayName("DELETE $BASE_URL/{carId}")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @WithMockUser(username = "daniel")
     inner class DeleteExistingCar {
 
         @Test
         @DirtiesContext
-        @WithMockUser(username = "daniel")
         fun `should set field deleted to true for the car with given id`() {
             // given
             val carId = 1L
@@ -269,7 +266,6 @@ internal class CarControllerTest @Autowired constructor(
         }
 
         @Test
-        @WithMockUser(username = "daniel")
         fun `should return NOT FOUND if the car with the given id does not exist`() {
 
             val carId = 0

@@ -17,7 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class DefaultCarService implements CarService {
+public class DefaultCarService implements
+        CarService {
 
     private final CarRepository carRepository;
     private final FindEntityCheckedUtil entityCheckedUtil;

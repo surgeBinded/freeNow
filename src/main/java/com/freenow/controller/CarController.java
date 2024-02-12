@@ -17,7 +17,6 @@ import static com.freenow.util.AppConstants.*;
 
 @RestController
 @RequestMapping("v1/cars")
-@CrossOrigin
 public class CarController {
 
     private final CarService carService;
@@ -31,7 +30,7 @@ public class CarController {
     public ResponseCarDTO getAllCars(
             @RequestParam(value = "pageNo", defaultValue = DEFAULT_PAGE_NUMBER, required = false) final int pageNo,
             @RequestParam(value = "pageSize", defaultValue = DEFAULT_PAGE_SIZE, required = false) final int pageSize,
-            @RequestParam(value = "sortBy", defaultValue = DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortBy", defaultValue = DEFAULT_SORT_BY, required = false) final String sortBy,
             @RequestParam(value = "sortDir", defaultValue = DEFAULT_SORT_DIRECTION, required = false) String sortDir
     ) {
         return carService.getAllCars(pageNo, pageSize, sortBy, sortDir);

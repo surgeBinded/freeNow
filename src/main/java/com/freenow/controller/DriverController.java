@@ -114,7 +114,7 @@ public class DriverController {
      *                      }
      * @return a set of drivers that have the corresponding filters
      */
-    @PostMapping("/search")
+    @GetMapping("/search")
     public ResponseDriverDTO search(@RequestBody SearchFilters searchFilters,
                                     @RequestParam(value = "pageNo", defaultValue = DEFAULT_PAGE_NUMBER, required = false) final int pageNo,
                                     @RequestParam(value = "pageSize", defaultValue = DEFAULT_PAGE_SIZE, required = false) final int pageSize,

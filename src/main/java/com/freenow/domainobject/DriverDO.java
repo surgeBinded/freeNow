@@ -118,4 +118,19 @@ public class DriverDO {
     public void setCarDO(final Set<CarDO> carDO) {
         this.carDO = carDO;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DriverDO driverDO = (DriverDO) o;
+
+        return id.equals(driverDO.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

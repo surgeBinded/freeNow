@@ -27,15 +27,12 @@ import java.util.stream.Collectors;
 public class DefaultDriverService implements DriverService {
 
     private final DriverRepository driverRepository;
-    private final CustomDriverRepository customDriverRepository;
     private final FindEntityCheckedUtil entityCheckedUtil;
 
 
     public DefaultDriverService(final DriverRepository driverRepository,
-                                final CustomDriverRepository customDriverRepository,
                                 final FindEntityCheckedUtil entityCheckedUtil) {
         this.driverRepository = driverRepository;
-        this.customDriverRepository = customDriverRepository;
         this.entityCheckedUtil = entityCheckedUtil;
     }
 
@@ -178,7 +175,7 @@ public class DefaultDriverService implements DriverService {
                 : Sort.by(sortBy).descending();
 
         final var pageable = PageRequest.of(pageNo, pageSize, sort);
-        final var drivers = driverRepository.findAll(customDriverRepository.getSpecification(searchFilters), pageable);
+        final var drivers = driverRepository.findAll(CustomDriverRepository.getSpecification(searchFilters), pageable);
         final var content = DriverMapper.makeDriverDTOList(drivers.getContent().stream().distinct().collect(Collectors.toList()));
 
         return new ResponseDriverDTO(content, drivers.getNumber(), drivers.getSize(), content.size(), drivers.getTotalPages(), drivers.isLast());
